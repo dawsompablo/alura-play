@@ -14,14 +14,10 @@ if ($title === false) {
     exit;
 }
 
-$sql = "INSERT INTO videos (url, title) VALUES (?, ?)";
+$repository = new Alura\Mvc\Repository\VideoRepository($pdo);
 
-$statement = $pdo->prepare($sql);
-$statement->bindParam(1, $_POST['url']);
-$statement->bindParam(2, $_POST['titulo']);
-
-if ($statement->execute() === false) {
-    header('Location: /?sucesso=0');
+if ($repository->add(new \Alura\Mvc\Entity\Video($url, $title)) === false) {
+    header(header: 'Location: /?sucesso=0');
 } else {
-    header('Location: /?sucesso=1');
+    header(header: 'Location: /?sucesso=1');
 }
