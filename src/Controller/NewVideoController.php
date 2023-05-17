@@ -7,8 +7,12 @@ namespace Alura\Mvc\Controller;
 use Alura\Mvc\Entity\Video;
 use Alura\Mvc\Helper\FlashMessageTrait;
 use Alura\Mvc\Repository\VideoRepository;
+use Nyholm\Psr7\Response;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class NewVideoController implements Controller
+class NewVideoController implements RequestHandlerInterface
 {
     use FlashMessageTrait;
 
@@ -16,20 +20,20 @@ class NewVideoController implements Controller
     {
     }
 
-    public function processaRequisicao(): void
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $url = filter_input(INPUT_POST, 'url', FILTER_VALIDATE_URL);
+        $queryParams = $request->getQueryParams();
+
+        $url = filter_var($queryParams['url'], FILTER_VALIDATE_URL);
         if ($url === false) {
             $this->addErrorMessage('URL inválida');
-            header('Location: /novo-video');
-            return;
+            return new Response(301, ['location' => '/novo-video']);
         }
 
-        $titulo = filter_input(INPUT_POST, 'titulo');
+        $titulo = filter_var($queryParams['titulo']);
         if ($titulo === false) {
             $this->addErrorMessage('Título não informado');
-            header('Location: /novo-video');
-            return;
+            return new Response(301, ['location' => '/novo-video']);
         }
 
         $video = new Video($url, $titulo);
@@ -52,9 +56,9 @@ class NewVideoController implements Controller
         $success = $this->videoRepository->add($video);
         if ($success === false) {
             $this->addErrorMessage('Erro ao cadastrar vídeo');
-            header('Location: /novo-video');
+            return new Response(301, ['location' => '/novo-video']);
         } else {
-            header('Location: /?sucesso=1');
+            return new Response(301, ['location' => '/']);
         }
     }
 }
