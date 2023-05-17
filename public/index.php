@@ -7,7 +7,6 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-
 $routes = require_once __DIR__ . '/../config/routes.php';
 /** @var \Psr\Container\ContainerInterface $diContainer */
 $diContainer = require_once __DIR__ . '/../config/dependencies.php';
@@ -39,14 +38,12 @@ if (array_key_exists($key, $routes)) {
 }
 
 $psr17Factory = new \Nyholm\Psr7\Factory\Psr17Factory();
-
 $creator = new \Nyholm\Psr7Server\ServerRequestCreator(
     $psr17Factory, // ServerRequestFactory
     $psr17Factory, // UriFactory
     $psr17Factory, // UploadedFileFactory
     $psr17Factory  // StreamFactory
 );
-
 $serverRequest = $creator->fromGlobals();
 
 /** @var RequestHandlerInterface $controller */
