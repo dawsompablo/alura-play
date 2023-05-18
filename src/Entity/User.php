@@ -6,8 +6,9 @@ namespace Alura\Mvc\Entity;
 
 class User
 {
+    public readonly int $id;
+
     public function __construct(
-        public int $id,
         public string $email,
         public string $password
     ) {
