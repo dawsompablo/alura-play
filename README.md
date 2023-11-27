@@ -1,6 +1,6 @@
 # Alura play
 
-Projeto de estudo de MVC (Model, View, Controller) usando PHP.
+Projeto de estudo de Clean Arquiteure usando PHP.
 
 ## Executando o projeto
 
